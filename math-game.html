@@ -551,6 +551,43 @@
             background: #f89f4a;
         }
 
+        .float-correct {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.5);
+            font-size: 3rem;
+            font-weight: 900;
+            color: #5cb85c;
+            text-shadow: 3px 3px 0 #e8f5e9, 0 0 20px rgba(92, 184, 92, 0.5);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .float-correct.show {
+            animation: floatUp 1.2s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(-10px) scale(1.2);
+            }
+            60% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(-30px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-60px) scale(0.9);
+            }
+        }
+
         @media (max-width: 360px) {
             .game-container {
                 border-radius: 24px;
@@ -670,6 +707,7 @@
     </div>
 
     <div class="word-area">
+        <div class="float-correct" id="floatCorrect">✅ 答对啦！</div>
         <div class="word-card" id="wordCard">
             <div class="word-text" id="currentWord">🐣 准备开始</div>
             <div class="word-sub" id="subTypeLabel">👩‍🏫 点击下方按钮开始</div>
@@ -893,7 +931,6 @@
 
         var userAnswers = {};
         var questionResults = {};
-        var autoNextTimer = null;
 
         var wordDisplay = document.getElementById('currentWord');
         var wordCard = document.getElementById('wordCard');
@@ -919,6 +956,8 @@
         var finishAccuracy = document.getElementById('finishAccuracy');
         var finishTime = document.getElementById('finishTime');
         var restartBtn = document.getElementById('restartBtn');
+        var floatCorrect = document.getElementById('floatCorrect');
+        var floatTimer = null;
 
         function updateTimer() {
             if (!startTime) return;
@@ -1031,6 +1070,20 @@
             answerInput.focus();
         }
 
+        function showFloatCorrect() {
+            if (floatTimer) {
+                clearTimeout(floatTimer);
+                floatTimer = null;
+            }
+            floatCorrect.classList.remove('show');
+            void floatCorrect.offsetWidth;
+            floatCorrect.classList.add('show');
+            floatTimer = setTimeout(function() {
+                floatCorrect.classList.remove('show');
+                floatTimer = null;
+            }, 1200);
+        }
+
         function submitAnswer() {
             if (total === 0) return;
 
@@ -1060,16 +1113,18 @@
                 correctCount++;
                 wordCard.classList.add('correct');
                 answerInput.classList.add('correct');
-                resultHint.textContent = '✅ 回答正确！5秒后自动下一题';
-                resultHint.classList.add('correct');
+                resultHint.textContent = '';
+                resultHint.classList.remove('correct', 'wrong');
+
+                showFloatCorrect();
+                updateStats();
 
                 if (currentIndex < total - 1) {
-                    if (autoNextTimer) {
-                        clearTimeout(autoNextTimer);
-                    }
-                    autoNextTimer = setTimeout(function() {
+                    setTimeout(function() {
                         goNext();
-                    }, 5000);
+                    }, 200);
+                } else {
+                    setTimeout(showFinish, 800);
                 }
             } else {
                 wrongCount++;
@@ -1077,12 +1132,7 @@
                 answerInput.classList.add('wrong');
                 resultHint.textContent = '❌ 正确答案：' + q.answer;
                 resultHint.classList.add('wrong');
-            }
-
-            updateStats();
-
-            if (currentIndex >= total - 1) {
-                setTimeout(showFinish, 800);
+                updateStats();
             }
         }
 
@@ -1102,10 +1152,11 @@
 
         function resetGame() {
             stopTimer();
-            if (autoNextTimer) {
-                clearTimeout(autoNextTimer);
-                autoNextTimer = null;
+            if (floatTimer) {
+                clearTimeout(floatTimer);
+                floatTimer = null;
             }
+            floatCorrect.classList.remove('show');
             startTime = null;
             updateTimer();
             correctCount = 0;
@@ -1120,10 +1171,11 @@
 
         function goPrev() {
             if (currentIndex > 0) {
-                if (autoNextTimer) {
-                    clearTimeout(autoNextTimer);
-                    autoNextTimer = null;
+                if (floatTimer) {
+                    clearTimeout(floatTimer);
+                    floatTimer = null;
                 }
+                floatCorrect.classList.remove('show');
                 currentIndex--;
                 updateDisplay();
             }
@@ -1131,10 +1183,11 @@
 
         function goNext() {
             if (currentIndex < total - 1) {
-                if (autoNextTimer) {
-                    clearTimeout(autoNextTimer);
-                    autoNextTimer = null;
+                if (floatTimer) {
+                    clearTimeout(floatTimer);
+                    floatTimer = null;
                 }
+                floatCorrect.classList.remove('show');
                 currentIndex++;
                 updateDisplay();
             }
