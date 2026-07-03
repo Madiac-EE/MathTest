@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>🧮 两位数加减口算PK赛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #2b6d8f 0%, #15455e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+            padding: 12px;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            min-height: 92vh;
+            background: #fffbee;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35), inset 0 2px 4px rgba(255, 255, 200, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .game-header {
+            text-align: center;
+            padding: 16px 12px 10px;
+            background: #ffd98c;
+            border-bottom: 4px solid #f0b84d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+        }
+
+        .game-header h1 {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: #1e3a4b;
+            text-shadow: 1px 1px 0 #ffba5a;
+            display: inline-block;
+            padding: 4px 20px;
+            border-radius: 40px;
+            line-height: 1.4;
+            font-weight: 800;
+            background: #fff3d6;
+            box-shadow: inset 0 1px 4px rgba(255, 255, 200, 0.7);
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2c4a3a;
+        }
+
+        .meta-badge {
+            background: #f5e7d3;
+            padding: 3px 12px;
+            border-radius: 30px;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+            font-size: 0.8rem;
+        }
+
+        .type-badge {
+            background: #8fb3d9;
+            color: #fff;
+            padding: 3px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 0 #4f6f8f;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 8px;
+            background: #fcf3e6;
+            border-bottom: 2px solid #eac089;
+            flex-shrink: 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4a6a4a;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1f4a2c;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .stat-icon {
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .word-area {
+            flex: 1;
+            background: #fdf8ed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background-image: radial-gradient(circle at 20% 30%, rgba(255, 210, 130, 0.15) 2%, transparent 2.5%);
+            background-size: 24px 24px;
+            min-height: 200px;
+        }
+
+        .word-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 40px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1), inset 0 2px 8px rgba(255, 245, 200, 0.6);
+            text-align: center;
+            padding: 1.5rem 0.8rem;
+            border: 4px solid #ffcf7a;
+            transition: transform 0.15s ease, border-color 0.3s ease;
+        }
+
+        .word-card.correct {
+            border-color: #5cb85c;
+            background: #e8f5e9;
+            animation: correctPulse 0.4s ease-out;
+        }
+
+        .word-card.wrong {
+            border-color: #d9534f;
+            background: #fdecea;
+            animation: wrongShake 0.4s ease-out;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(0.98); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .word-text {
+            font-size: clamp(2.4rem, 12vw, 4.0rem);
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #1f4a2c;
+            text-shadow: 3px 3px 0 #fde2b3;
+            word-break: break-word;
+            line-height: 1.3;
+            padding: 0 8px;
+        }
+
+        .word-sub {
+            font-size: 0.8rem;
+            color: #a08060;
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .answer-area {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .answer-label {
+            font-size: 0.85rem;
+            color: #8b7355;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 200px;
+            height: 60px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            border: 4px solid #ffcf7a;
+            border-radius: 20px;
+            background: white;
+            color: #1f4a2c;
+            outline: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08), inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+
+        .answer-input:focus {
+            border-color: #f5b06b;
+            box-shadow: 0 8px 20px rgba(245, 176, 107, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .answer-input.correct {
+            border-color: #5cb85c;
+            background: #e8f5e9;
+        }
+
+        .answer-input.wrong {
+            border-color: #d9534f;
+            background: #fdecea;
+        }
+
+        .answer-input::-webkit-outer-spin-button,
+        .answer-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .result-hint {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 10px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .result-hint.correct {
+            color: #5cb85c;
+        }
+
+        .result-hint.wrong {
+            color: #d9534f;
+        }
+
+        .num-pad {
+            padding: 16px 12px 20px;
+            background: #f5e6d0;
+            border-top: 3px dashed #eac089;
+            flex-shrink: 0;
+        }
+
+        .num-pad-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .num-btn {
+            width: 22%;
+            max-width: 80px;
+            height: 56px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 16px;
+            background: #fff;
+            color: #1e3a4b;
+            box-shadow: 0 6px 0 #d4b896;
+            cursor: pointer;
+            transition: all 0.08s linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .num-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #d4b896;
+        }
+
+        .num-btn:hover {
+            background: #fefcf6;
+        }
+
+        .num-btn.op-btn {
+            background: #f5b06b;
+            color: white;
+            box-shadow: 0 6px 0 #b1703a;
+        }
+
+        .num-btn.op-btn:active {
+            box-shadow: 0 2px 0 #b1703a;
+        }
+
+        .num-btn.op-btn:hover {
+            background: #f89f4a;
+        }
+
+        .num-btn.del-btn {
+            background: #8fb3d9;
+            box-shadow: 0 6px 0 #4f6f8f;
+        }
+
+        .num-btn.del-btn:active {
+            box-shadow: 0 2px 0 #4f6f8f;
+        }
+
+        .num-btn.del-btn:hover {
+            background: #6397bb;
+        }
+
+        .num-btn.submit-btn {
+            background: #5cb85c;
+            box-shadow: 0 6px 0 #3d8b3d;
+            font-size: 1.1rem;
+        }
+
+        .num-btn.submit-btn:active {
+            box-shadow: 0 2px 0 #3d8b3d;
+        }
+
+        .num-btn.submit-btn:hover {
+            background: #4cae4c;
+        }
+
+        .nav-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background: #fcf3e6;
+            border-top: 2px solid #eac089;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            background: #f5b06b;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #b1703a;
+            transition: 0.06s linear;
+            font-family: inherit;
+            letter-spacing: 1px;
+            min-width: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b1703a;
+        }
+
+        .nav-btn:hover {
+            background: #f89f4a;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.45;
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b1703a;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .nav-btn.prev-btn {
+            background: #7fa9c9;
+            box-shadow: 0 5px 0 #4f6f8f;
+        }
+
+        .nav-btn.prev-btn:hover {
+            background: #6397bb;
+        }
+
+        .nav-btn.reset-btn {
+            background: #95a5a6;
+            box-shadow: 0 5px 0 #7f8c8d;
+            font-size: 0.9rem;
+            padding: 8px 18px;
+        }
+
+        .nav-btn.reset-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .progress-hint {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #3d5a3d;
+            background: #fffbee;
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 2px solid #dbbd95;
+            text-align: center;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0.6; }
+            70% { transform: scale(1.03); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .word-pop {
+            animation: popIn 0.25s ease-out;
+        }
+
+        .finish-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .finish-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .finish-content {
+            background: #fffbee;
+            border-radius: 32px;
+            padding: 32px 24px;
+            width: 85%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .finish-modal.show .finish-content {
+            transform: scale(1);
+        }
+
+        .finish-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1e3a4b;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #ffba5a;
+        }
+
+        .finish-stat-row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .finish-stat-box {
+            background: #fdf8ed;
+            padding: 16px 12px;
+            border-radius: 20px;
+            border: 3px solid #ffcf7a;
+            min-width: 80px;
+        }
+
+        .finish-stat-label {
+            font-size: 0.75rem;
+            color: #8b7355;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .finish-stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1f4a2c;
+            display: block;
+        }
+
+        .finish-time {
+            font-size: 1rem;
+            color: #2c4a3a;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .finish-btn {
+            background: #f5b06b;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #b1703a;
+            transition: 0.06s linear;
+            font-family: inherit;
+            letter-spacing: 2px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .finish-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #b1703a;
+        }
+
+        .finish-btn:hover {
+            background: #f89f4a;
+        }
+
+        @media (max-width: 360px) {
+            .game-container {
+                border-radius: 24px;
+                min-height: 90vh;
+            }
+
+            .game-header h1 {
+                font-size: 1.2rem;
+                padding: 3px 14px;
+            }
+
+            .header-meta {
+                font-size: 0.75rem;
+                gap: 8px;
+            }
+
+            .type-badge {
+                font-size: 0.7rem;
+                min-width: 80px;
+                padding: 2px 10px;
+            }
+
+            .stat-item {
+                font-size: 0.7rem;
+            }
+
+            .stat-value {
+                font-size: 0.9rem;
+            }
+
+            .word-card {
+                padding: 1rem 0.5rem;
+                border-radius: 28px;
+            }
+
+            .word-text {
+                font-size: clamp(2.0rem, 10vw, 3.2rem);
+                letter-spacing: 2px;
+            }
+
+            .answer-input {
+                height: 50px;
+                font-size: 1.8rem;
+            }
+
+            .num-btn {
+                height: 48px;
+                font-size: 1.3rem;
+            }
+
+            .nav-btn {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+                min-width: 60px;
+            }
+
+            .num-pad {
+                padding: 12px 8px 16px;
+            }
+
+            .num-pad-row {
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .game-container {
+                max-width: 520px;
+                min-height: 600px;
+                height: auto;
+            }
+
+            .word-text {
+                font-size: 3.5rem;
+            }
+
+            .num-btn {
+                height: 64px;
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="game-header">
+        <h1>🧮 口算PK赛 🧮</h1>
+        <div class="header-meta">
+            <span class="meta-badge" id="progressDisplay">第 1 / 0 题</span>
+            <span class="type-badge" id="typeDisplay">🏷️ 准备</span>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-icon">✅</span>
+            <span class="stat-value" id="correctCount">0</span>
+            <span>正确</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">❌</span>
+            <span class="stat-value" id="wrongCount">0</span>
+            <span>错误</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-value" id="totalTime">00:00</span>
+            <span>用时</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">📊</span>
+            <span class="stat-value" id="accuracy">0%</span>
+            <span>正确率</span>
+        </div>
+    </div>
+
+    <div class="word-area">
+        <div class="word-card" id="wordCard">
+            <div class="word-text" id="currentWord">🐣 准备开始</div>
+            <div class="word-sub" id="subTypeLabel">👩‍🏫 点击下方按钮开始</div>
+        </div>
+
+        <div class="answer-area">
+            <span class="answer-label">输入答案</span>
+            <input type="number" class="answer-input" id="answerInput" placeholder="?" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            <div class="result-hint" id="resultHint"></div>
+        </div>
+    </div>
+
+    <div class="num-pad">
+        <div class="num-pad-row">
+            <button class="num-btn" data-num="1">1</button>
+            <button class="num-btn" data-num="2">2</button>
+            <button class="num-btn" data-num="3">3</button>
+            <button class="num-btn op-btn del-btn" id="delBtn">⌫</button>
+        </div>
+        <div class="num-pad-row">
+            <button class="num-btn" data-num="4">4</button>
+            <button class="num-btn" data-num="5">5</button>
+            <button class="num-btn" data-num="6">6</button>
+            <button class="num-btn op-btn submit-btn" id="submitBtn">确定</button>
+        </div>
+        <div class="num-pad-row">
+            <button class="num-btn" data-num="7">7</button>
+            <button class="num-btn" data-num="8">8</button>
+            <button class="num-btn" data-num="9">9</button>
+            <button class="num-btn op-btn" id="clearBtn">清空</button>
+        </div>
+        <div class="num-pad-row">
+            <button class="num-btn" data-num="-">-</button>
+            <button class="num-btn" data-num="0">0</button>
+            <button class="num-btn" data-num="00">00</button>
+            <button class="num-btn op-btn" id="nextBtn">下一题</button>
+        </div>
+    </div>
+
+    <div class="nav-area">
+        <button class="nav-btn prev-btn" id="prevBtn">◀ 上一题</button>
+        <span class="progress-hint" id="roundHint">🏁 第 1 轮</span>
+        <button class="nav-btn reset-btn" id="resetBtn">🔄 重开</button>
+    </div>
+</div>
+
+<div class="finish-modal" id="finishModal">
+    <div class="finish-content">
+        <div class="finish-title">🎉 完成啦！</div>
+        <div class="finish-stat-row">
+            <div class="finish-stat-box">
+                <span class="finish-stat-label">总题数</span>
+                <span class="finish-stat-value" id="finishTotal">0</span>
+            </div>
+            <div class="finish-stat-box">
+                <span class="finish-stat-label">正确</span>
+                <span class="finish-stat-value" id="finishCorrect">0</span>
+            </div>
+            <div class="finish-stat-box">
+                <span class="finish-stat-label">正确率</span>
+                <span class="finish-stat-value" id="finishAccuracy">0%</span>
+            </div>
+        </div>
+        <div class="finish-time" id="finishTime">总用时：00:00</div>
+        <button class="finish-btn" id="restartBtn">再来一次</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        function safeInit() {
+            try {
+                if (typeof console !== 'undefined' && console.log) {
+                    console.log('Math Game JS loaded successfully');
+                }
+            } catch(e) {}
+        }
+
+        function createEvent(name) {
+            if (typeof Event === 'function') {
+                return new Event(name, { bubbles: true, cancelable: true });
+            }
+            var evt = document.createEvent('Event');
+            evt.initEvent(name, true, true);
+            return evt;
+        }
+
+        function addEventListenerCompat(element, eventName, handler) {
+            if (element.addEventListener) {
+                element.addEventListener(eventName, handler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, handler);
+            }
+        }
+
+        function removeEventListenerCompat(element, eventName, handler) {
+            if (element.removeEventListener) {
+                element.removeEventListener(eventName, handler, false);
+            } else if (element.detachEvent) {
+                element.detachEvent('on' + eventName, handler);
+            }
+        }
+
+        var NUMBERS = [];
+        for (var i = 10; i <= 99; i++) NUMBERS.push(i);
+
+        var type1 = [];
+        var type2 = [];
+        var type3 = [];
+        var type4 = [];
+
+        for (var aIdx = 0; aIdx < NUMBERS.length; aIdx++) {
+            var a = NUMBERS[aIdx];
+            for (var bIdx = 0; bIdx < NUMBERS.length; bIdx++) {
+                var b = NUMBERS[bIdx];
+                if (a > b) continue;
+                var aTens = Math.floor(a / 10);
+                var bTens = Math.floor(b / 10);
+                if (aTens === bTens) continue;
+
+                var sum = a + b;
+                if (sum > 99) continue;
+
+                var aUnits = a % 10;
+                var bUnits = b % 10;
+
+                var display = a + ' + ' + b;
+                var entry = { display: display, type: '', a: a, b: b, answer: sum };
+
+                if (aUnits + bUnits < 10) {
+                    entry.type = '不进位加法';
+                    type1.push(entry);
+                } else {
+                    entry.type = '进位加法';
+                    type4.push(entry);
+                }
+            }
+        }
+
+        for (var aIdx2 = 0; aIdx2 < NUMBERS.length; aIdx2++) {
+            var a2 = NUMBERS[aIdx2];
+            for (var bIdx2 = 0; bIdx2 < NUMBERS.length; bIdx2++) {
+                var b2 = NUMBERS[bIdx2];
+                if (a2 <= b2) continue;
+                var aTens2 = Math.floor(a2 / 10);
+                var bTens2 = Math.floor(b2 / 10);
+                if (aTens2 === bTens2) continue;
+
+                var diff = a2 - b2;
+                if (diff <= 0) continue;
+
+                var aUnits2 = a2 % 10;
+                var bUnits2 = b2 % 10;
+
+                var display2 = a2 + ' - ' + b2;
+                var entry2 = { display: display2, type: '', a: a2, b: b2, answer: diff };
+
+                var needBorrowUnits = aUnits2 < bUnits2;
+                var needBorrowTens = aTens2 < bTens2;
+
+                if (needBorrowUnits || needBorrowTens) {
+                    entry2.type = '退位减法';
+                    type2.push(entry2);
+                } else {
+                    entry2.type = '不退位减法';
+                    type3.push(entry2);
+                }
+            }
+        }
+
+        function shuffle(arr) {
+            for (var i = arr.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+
+        shuffle(type1);
+        shuffle(type2);
+        shuffle(type3);
+        shuffle(type4);
+
+        var count1 = type1.length;
+        var count2 = type2.length;
+        var count3 = type3.length;
+        var count4 = type4.length;
+        var minRounds = Math.min(count1, count2, count3, count4);
+
+        var allQuestions = [];
+        for (var i = 0; i < minRounds; i++) {
+            allQuestions.push(type1[i]);
+            allQuestions.push(type2[i]);
+            allQuestions.push(type3[i]);
+            allQuestions.push(type4[i]);
+        }
+
+        if (allQuestions.length === 0) {
+            var fallback = [
+                { display: '10 + 20', type: '不进位加法', a: 10, b: 20, answer: 30 },
+                { display: '30 - 15', type: '退位减法', a: 30, b: 15, answer: 15 },
+                { display: '45 - 23', type: '不退位减法', a: 45, b: 23, answer: 22 },
+                { display: '27 + 38', type: '进位加法', a: 27, b: 38, answer: 65 }
+            ];
+            for (var fIdx = 0; fIdx < fallback.length; fIdx++) {
+                allQuestions.push(fallback[fIdx]);
+            }
+        }
+
+        var total = allQuestions.length;
+        var currentIndex = 0;
+
+        var correctCount = 0;
+        var wrongCount = 0;
+        var startTime = null;
+        var timerInterval = null;
+
+        var userAnswers = {};
+        var questionResults = {};
+        var autoNextTimer = null;
+
+        var wordDisplay = document.getElementById('currentWord');
+        var wordCard = document.getElementById('wordCard');
+        var progressDisplay = document.getElementById('progressDisplay');
+        var typeDisplay = document.getElementById('typeDisplay');
+        var subTypeLabel = document.getElementById('subTypeLabel');
+        var roundHint = document.getElementById('roundHint');
+        var prevBtn = document.getElementById('prevBtn');
+        var nextBtn = document.getElementById('nextBtn');
+        var resetBtn = document.getElementById('resetBtn');
+        var answerInput = document.getElementById('answerInput');
+        var resultHint = document.getElementById('resultHint');
+        var correctCountEl = document.getElementById('correctCount');
+        var wrongCountEl = document.getElementById('wrongCount');
+        var totalTimeEl = document.getElementById('totalTime');
+        var accuracyEl = document.getElementById('accuracy');
+        var delBtn = document.getElementById('delBtn');
+        var clearBtn = document.getElementById('clearBtn');
+        var submitBtn = document.getElementById('submitBtn');
+        var finishModal = document.getElementById('finishModal');
+        var finishTotal = document.getElementById('finishTotal');
+        var finishCorrect = document.getElementById('finishCorrect');
+        var finishAccuracy = document.getElementById('finishAccuracy');
+        var finishTime = document.getElementById('finishTime');
+        var restartBtn = document.getElementById('restartBtn');
+
+        function updateTimer() {
+            if (!startTime) return;
+            var now = Date.now();
+            var diff = Math.floor((now - startTime) / 1000);
+            var minutes = Math.floor(diff / 60);
+            var seconds = diff % 60;
+            totalTimeEl.textContent = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        }
+
+        function startTimer() {
+            if (!startTime) {
+                startTime = Date.now();
+            }
+            if (!timerInterval) {
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateStats() {
+            correctCountEl.textContent = correctCount;
+            wrongCountEl.textContent = wrongCount;
+            var answered = correctCount + wrongCount;
+            var acc = answered > 0 ? Math.round((correctCount / answered) * 100) : 0;
+            accuracyEl.textContent = acc + '%';
+        }
+
+        function getQuestionResult(index) {
+            return questionResults[index];
+        }
+
+        function setQuestionResult(index, isCorrect) {
+            questionResults[index] = isCorrect;
+        }
+
+        function updateDisplay() {
+            if (total === 0) {
+                wordDisplay.textContent = '🎯 暂无题目';
+                subTypeLabel.textContent = '请刷新页面重试';
+                progressDisplay.textContent = '第 0 / 0 题';
+                typeDisplay.textContent = '⚠️ 无题';
+                roundHint.textContent = '🏁 第 0 轮';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                answerInput.disabled = true;
+                return;
+            }
+
+            var q = allQuestions[currentIndex];
+            wordDisplay.classList.remove('word-pop');
+            void wordDisplay.offsetWidth;
+            wordDisplay.textContent = q.display;
+            wordDisplay.classList.add('word-pop');
+
+            progressDisplay.textContent = '第 ' + (currentIndex + 1) + ' / ' + total + ' 题';
+
+            var typeMap = {
+                '不进位加法': '➕ 不进位加法',
+                '退位减法': '➖ 退位减法',
+                '不退位减法': '➖ 不退位减法',
+                '进位加法': '➕ 进位加法'
+            };
+            typeDisplay.textContent = typeMap[q.type] || q.type;
+            subTypeLabel.textContent = '📌 ' + q.type;
+
+            var roundNum = Math.floor(currentIndex / 4) + 1;
+            var totalRounds = Math.floor(total / 4);
+            roundHint.textContent = '🏁 第 ' + roundNum + ' / ' + totalRounds + ' 轮';
+
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = (currentIndex >= total - 1);
+
+            wordCard.style.transform = 'scale(0.98)';
+            setTimeout(function() {
+                wordCard.style.transform = '';
+            }, 150);
+
+            wordCard.classList.remove('correct', 'wrong');
+            answerInput.classList.remove('correct', 'wrong');
+            resultHint.textContent = '';
+            resultHint.classList.remove('correct', 'wrong');
+
+            if (userAnswers[currentIndex] !== undefined) {
+                answerInput.value = userAnswers[currentIndex];
+                var result = getQuestionResult(currentIndex);
+                if (result !== undefined) {
+                    if (result) {
+                        wordCard.classList.add('correct');
+                        answerInput.classList.add('correct');
+                        resultHint.textContent = '✅ 回答正确！';
+                        resultHint.classList.add('correct');
+                    } else {
+                        wordCard.classList.add('wrong');
+                        answerInput.classList.add('wrong');
+                        resultHint.textContent = '❌ 正确答案：' + q.answer;
+                        resultHint.classList.add('wrong');
+                    }
+                }
+            } else {
+                answerInput.value = '';
+            }
+
+            answerInput.focus();
+        }
+
+        function submitAnswer() {
+            if (total === 0) return;
+
+            var q = allQuestions[currentIndex];
+            var userVal = answerInput.value.trim();
+
+            if (userVal === '') {
+                resultHint.textContent = '⚠️ 请输入答案';
+                resultHint.classList.remove('correct', 'wrong');
+                return;
+            }
+
+            var userNum = parseInt(userVal, 10);
+            if (isNaN(userNum)) {
+                resultHint.textContent = '⚠️ 请输入有效数字';
+                resultHint.classList.remove('correct', 'wrong');
+                return;
+            }
+
+            startTimer();
+
+            userAnswers[currentIndex] = userVal;
+            var isCorrect = userNum === q.answer;
+            setQuestionResult(currentIndex, isCorrect);
+
+            if (isCorrect) {
+                correctCount++;
+                wordCard.classList.add('correct');
+                answerInput.classList.add('correct');
+                resultHint.textContent = '✅ 回答正确！5秒后自动下一题';
+                resultHint.classList.add('correct');
+
+                if (currentIndex < total - 1) {
+                    if (autoNextTimer) {
+                        clearTimeout(autoNextTimer);
+                    }
+                    autoNextTimer = setTimeout(function() {
+                        goNext();
+                    }, 5000);
+                }
+            } else {
+                wrongCount++;
+                wordCard.classList.add('wrong');
+                answerInput.classList.add('wrong');
+                resultHint.textContent = '❌ 正确答案：' + q.answer;
+                resultHint.classList.add('wrong');
+            }
+
+            updateStats();
+
+            if (currentIndex >= total - 1) {
+                setTimeout(showFinish, 800);
+            }
+        }
+
+        function showFinish() {
+            stopTimer();
+            finishTotal.textContent = total;
+            finishCorrect.textContent = correctCount;
+            var acc = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            finishAccuracy.textContent = acc + '%';
+            finishTime.textContent = '总用时：' + totalTimeEl.textContent;
+            finishModal.classList.add('show');
+        }
+
+        function hideFinish() {
+            finishModal.classList.remove('show');
+        }
+
+        function resetGame() {
+            stopTimer();
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+                autoNextTimer = null;
+            }
+            startTime = null;
+            updateTimer();
+            correctCount = 0;
+            wrongCount = 0;
+            userAnswers = {};
+            questionResults = {};
+            currentIndex = 0;
+            updateStats();
+            updateDisplay();
+            hideFinish();
+        }
+
+        function goPrev() {
+            if (currentIndex > 0) {
+                if (autoNextTimer) {
+                    clearTimeout(autoNextTimer);
+                    autoNextTimer = null;
+                }
+                currentIndex--;
+                updateDisplay();
+            }
+        }
+
+        function goNext() {
+            if (currentIndex < total - 1) {
+                if (autoNextTimer) {
+                    clearTimeout(autoNextTimer);
+                    autoNextTimer = null;
+                }
+                currentIndex++;
+                updateDisplay();
+            }
+        }
+
+        function handleNumClick(e) {
+            var target = e.target || e.srcElement;
+            var num = target.getAttribute('data-num');
+            if (num) {
+                if (num === '-') {
+                    if (answerInput.value.indexOf('-') === -1) {
+                        answerInput.value = '-' + answerInput.value;
+                    }
+                } else {
+                    answerInput.value += num;
+                }
+                answerInput.focus();
+            }
+        }
+
+        function handleDel() {
+            answerInput.value = answerInput.value.slice(0, -1);
+            answerInput.focus();
+        }
+
+        function handleClear() {
+            answerInput.value = '';
+            wordCard.classList.remove('correct', 'wrong');
+            answerInput.classList.remove('correct', 'wrong');
+            resultHint.textContent = '';
+            resultHint.classList.remove('correct', 'wrong');
+            answerInput.focus();
+        }
+
+        var numBtns = document.querySelectorAll('.num-btn[data-num]');
+        for (var nIdx = 0; nIdx < numBtns.length; nIdx++) {
+            addEventListenerCompat(numBtns[nIdx], 'click', handleNumClick);
+            addEventListenerCompat(numBtns[nIdx], 'touchstart', function(e) {
+                e.preventDefault();
+                handleNumClick(e);
+            }, false);
+        }
+
+        addEventListenerCompat(delBtn, 'click', handleDel);
+        addEventListenerCompat(delBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            handleDel();
+        }, false);
+
+        addEventListenerCompat(clearBtn, 'click', handleClear);
+        addEventListenerCompat(clearBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            handleClear();
+        }, false);
+
+        addEventListenerCompat(submitBtn, 'click', submitAnswer);
+        addEventListenerCompat(submitBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            submitAnswer();
+        }, false);
+
+        addEventListenerCompat(prevBtn, 'click', goPrev);
+        addEventListenerCompat(prevBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            goPrev();
+        }, false);
+
+        addEventListenerCompat(nextBtn, 'click', goNext);
+        addEventListenerCompat(nextBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            goNext();
+        }, false);
+
+        addEventListenerCompat(resetBtn, 'click', resetGame);
+        addEventListenerCompat(resetBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            resetGame();
+        }, false);
+
+        addEventListenerCompat(restartBtn, 'click', resetGame);
+        addEventListenerCompat(restartBtn, 'touchstart', function(e) {
+            e.preventDefault();
+            resetGame();
+        }, false);
+
+        addEventListenerCompat(answerInput, 'keydown', function(e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
+                submitAnswer();
+            } else if (e.key === 'ArrowLeft' || e.keyCode === 37) {
+                e.preventDefault();
+                goPrev();
+            } else if (e.key === 'ArrowRight' || e.keyCode === 39) {
+                e.preventDefault();
+                goNext();
+            }
+        });
+
+        addEventListenerCompat(window, 'keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.keyCode === 37) {
+                if (document.activeElement !== answerInput) {
+                    e.preventDefault();
+                    goPrev();
+                }
+            } else if (e.key === 'ArrowRight' || e.keyCode === 39) {
+                if (document.activeElement !== answerInput) {
+                    e.preventDefault();
+                    goNext();
+                }
+            }
+        });
+
+        safeInit();
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                updateStats();
+                updateDisplay();
+            });
+        } else {
+            updateStats();
+            updateDisplay();
+        }
+
+        if (window.console && window.console.log) {
+            window.console.log('📊 题库统计: 不进位加法 ' + count1 + ' 题, 退位减法 ' + count2 + ' 题, 不退位减法 ' + count3 + ' 题, 进位加法 ' + count4 + ' 题');
+            window.console.log('✅ 组成完整轮次 ' + minRounds + ' 轮, 共 ' + total + ' 道题');
+            if (minRounds === 0) {
+                window.console.warn('⚠️ 某类题目数量为0，请检查生成逻辑！');
+            }
+        }
+    })();
+</script>
+
+</body>
+</html>
