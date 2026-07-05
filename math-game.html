@@ -957,13 +957,399 @@
                 font-size: 1.6rem;
             }
         }
+
+        /* ===== 模式选择遮罩 ===== */
+        .mode-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .mode-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mode-content {
+            background: #fffbee;
+            border-radius: 32px;
+            padding: 28px 22px;
+            width: 88%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transform: scale(0.85);
+            transition: transform 0.3s ease;
+        }
+
+        .mode-modal.show .mode-content {
+            transform: scale(1);
+        }
+
+        .mode-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e3a4b;
+            margin-bottom: 6px;
+            text-shadow: 2px 2px 0 #ffba5a;
+        }
+
+        .mode-subtitle {
+            font-size: 0.85rem;
+            color: #8b7355;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .mode-card {
+            display: block;
+            width: 100%;
+            background: #fdf8ed;
+            border: 3px solid #ffcf7a;
+            border-radius: 20px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.12s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mode-card:active {
+            transform: scale(0.97);
+        }
+
+        .mode-card:hover {
+            border-color: #f5b06b;
+            background: #fff4dd;
+        }
+
+        .mode-card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1f4a2c;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .mode-card-desc {
+            font-size: 0.78rem;
+            color: #8b7355;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+
+        .mode-speed-row {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 4px 0 16px;
+            font-size: 0.85rem;
+            color: #2c4a3a;
+            font-weight: 600;
+        }
+
+        .mode-speed-row.show {
+            display: flex;
+        }
+
+        .mode-speed-select {
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1f4a2c;
+            padding: 6px 10px;
+            border-radius: 12px;
+            border: 2px solid #ffcf7a;
+            background: #fffbee;
+        }
+
+        /* ===== 揭示答案 / 倒计时（自动 & 手动模式）===== */
+        .reveal-box {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 18px;
+            background: #eafaf0;
+            border: 3px solid #7fd3a1;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1f7a45;
+            text-align: center;
+            animation: word-pop 0.3s ease;
+        }
+
+        .reveal-box.show {
+            display: block;
+        }
+
+        .countdown-ring {
+            display: none;
+            margin: 8px auto 0;
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #d98c2b;
+            text-align: center;
+            text-shadow: 2px 2px 0 #fff2d6;
+        }
+
+        .countdown-ring.show {
+            display: block;
+        }
+
+        .autoplay-status {
+            display: none;
+            margin-top: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #8b7355;
+            text-align: center;
+        }
+
+        .autoplay-status.show {
+            display: block;
+        }
+
+        /* ===== 历史记录弹窗（复用错题本样式骨架）===== */
+        .history-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 150;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .history-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .history-content {
+            background: #fffbee;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 420px;
+            max-height: 82%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transform: scale(0.85);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .history-modal.show .history-content {
+            transform: scale(1);
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px 12px;
+            border-bottom: 3px solid #ffcf7a;
+        }
+
+        .history-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #1e3a4b;
+        }
+
+        .history-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: #8b7355;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .history-summary {
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            color: #2c4a3a;
+            font-weight: 700;
+            background: #fdf8ed;
+            border-bottom: 2px solid #ffe4b0;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 16px;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: #8b7355;
+            font-weight: 600;
+            padding: 30px 10px;
+        }
+
+        .history-item {
+            background: #fdf8ed;
+            border: 2px solid #ffe0a3;
+            border-radius: 16px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item-left {
+            text-align: left;
+        }
+
+        .history-item-date {
+            font-size: 0.8rem;
+            color: #8b7355;
+            font-weight: 600;
+        }
+
+        .history-item-mode {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #1f4a2c;
+            margin-top: 2px;
+        }
+
+        .history-item-right {
+            text-align: right;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #2c4a3a;
+        }
+
+        .history-item-right .h-acc {
+            font-size: 1.1rem;
+            color: #d98c2b;
+        }
+
+        .history-footer {
+            padding: 12px 16px;
+            border-top: 3px solid #ffcf7a;
+            text-align: center;
+        }
+
+        .history-clear-btn {
+            background: #e57373;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #a94442;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .history-clear-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #a94442;
+        }
+
+        /* 顶部工具按钮 */
+        .mode-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #1e3a4b;
+            background: #ffe4b0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            margin-left: 6px;
+        }
+
+        /* ===== 浏览模式（自动/手动）控制按钮 ===== */
+        .browse-controls {
+            display: none;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .browse-controls.show {
+            display: flex;
+        }
+
+        .browse-btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.06s linear;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .browse-btn:active {
+            transform: translateY(3px);
+        }
+
+        .reveal-btn {
+            background: #5cb85c;
+            box-shadow: 0 5px 0 #3d8b3d;
+        }
+        .reveal-btn:active { box-shadow: 0 2px 0 #3d8b3d; }
+
+        .pause-btn {
+            background: #f0ad4e;
+            box-shadow: 0 5px 0 #b17a2a;
+        }
+        .pause-btn:active { box-shadow: 0 2px 0 #b17a2a; }
+
+        .next-browse-btn {
+            background: #5b9bd5;
+            box-shadow: 0 5px 0 #3a6ea5;
+        }
+        .next-browse-btn:active { box-shadow: 0 2px 0 #3a6ea5; }
+
+        .browse-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* 浏览模式下隐藏输入相关 UI */
+        .game-container.browse-mode .num-pad,
+        .game-container.browse-mode .answer-input,
+        .game-container.browse-mode .answer-label {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="game-container">
     <div class="game-header">
-        <h1>🧮 口算PK赛 🧮</h1>
+        <h1>🧮 口算PK赛 🧮<span class="mode-tag" id="modeTag">闯关</span></h1>
         <div class="header-meta">
             <span class="meta-badge" id="progressDisplay">第 1 / 0 题</span>
             <span class="type-badge" id="typeDisplay">🏷️ 准备</span>
@@ -1005,6 +1391,14 @@
             <span class="answer-label">输入答案</span>
             <input type="number" class="answer-input" id="answerInput" placeholder="?" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
             <div class="result-hint" id="resultHint"></div>
+            <div class="reveal-box" id="revealBox">答案：0</div>
+            <div class="countdown-ring" id="countdownRing">5</div>
+            <div class="autoplay-status" id="autoplayStatus"></div>
+            <div class="browse-controls" id="browseControls">
+                <button class="browse-btn reveal-btn" id="revealBtn">👀 看答案</button>
+                <button class="browse-btn pause-btn" id="pauseBtn">⏸️ 暂停</button>
+                <button class="browse-btn next-browse-btn" id="nextBrowseBtn">下一题 ▶</button>
+            </div>
         </div>
     </div>
 
@@ -1040,6 +1434,50 @@
         <span class="progress-hint" id="roundHint">🏁 第 1 轮</span>
         <button class="nav-btn wrong-book-btn" id="wrongBookBtn">📓 错题本<span class="badge" id="wrongBadge">0</span></button>
         <button class="nav-btn reset-btn" id="resetBtn">🔄 重开</button>
+    </div>
+
+    <div class="nav-area" id="toolBar">
+        <button class="nav-btn" id="modeSwitchBtn">🎛️ 换模式</button>
+        <button class="nav-btn" id="historyBtn">📈 历史记录</button>
+    </div>
+</div>
+
+<div class="mode-modal show" id="modeModal">
+    <div class="mode-content">
+        <div class="mode-title">🎯 选择练习模式</div>
+        <div class="mode-subtitle">挑一种玩法开始吧</div>
+        <div class="mode-speed-row show" style="margin-top:0;margin-bottom:16px;">
+            <span>本次练习题量</span>
+            <select class="mode-speed-select" id="sessionSizeSelect">
+                <option value="10">10 题</option>
+                <option value="20" selected>20 题</option>
+                <option value="30">30 题</option>
+                <option value="50">50 题</option>
+                <option value="99999">全部</option>
+            </select>
+        </div>
+        <button class="mode-card" data-mode="classic">
+            <span class="mode-card-title">⌨️ 闯关答题</span>
+            <span class="mode-card-desc">自己输入答案，系统自动判分、记录错题，闯关到底。</span>
+        </button>
+        <button class="mode-card" data-mode="auto">
+            <span class="mode-card-title">▶️ 自动播放</span>
+            <span class="mode-card-desc">每题限时倒计时，时间到自动亮出答案，停 3 秒再自动进入下一题。</span>
+        </button>
+        <div class="mode-speed-row" id="modeSpeedRow">
+            <span>每题作答时间</span>
+            <select class="mode-speed-select" id="autoSpeedSelect">
+                <option value="3">3 秒</option>
+                <option value="5" selected>5 秒</option>
+                <option value="8">8 秒</option>
+                <option value="10">10 秒</option>
+                <option value="15">15 秒</option>
+            </select>
+        </div>
+        <button class="mode-card" data-mode="manual">
+            <span class="mode-card-title">👆 手动翻牌</span>
+            <span class="mode-card-desc">先自己心算，点「看答案」揭晓，再点「下一题」继续，自己掌握节奏。</span>
+        </button>
     </div>
 </div>
 
@@ -1077,6 +1515,22 @@
         <div class="wrong-book-footer">
             <button class="wrong-book-action-btn" id="redoAllBtn">📝 全部重做</button>
             <button class="wrong-book-action-btn clear-btn" id="clearWrongBtn">🗑️ 清空</button>
+        </div>
+    </div>
+</div>
+
+<div class="history-modal" id="historyModal">
+    <div class="history-content">
+        <div class="history-header">
+            <div class="history-title">📈 练习历史</div>
+            <button class="history-close" id="historyClose">✕</button>
+        </div>
+        <div class="history-summary" id="historySummary">累计练习 0 次</div>
+        <div class="history-list" id="historyList">
+            <div class="history-empty">还没有练习记录，快去做几题吧！</div>
+        </div>
+        <div class="history-footer">
+            <button class="history-clear-btn" id="clearHistoryBtn">🗑️ 清空历史</button>
         </div>
     </div>
 </div>
@@ -1229,6 +1683,36 @@
         var total = allQuestions.length;
         var currentIndex = 0;
 
+        // 保存完整题库，练习时按题量抽取子集
+        var masterQuestions = allQuestions.slice();
+        var sessionSize = 20; // 每次练习题数（默认 20）
+
+        // 从完整题库均衡抽取约 n 道题作为一次练习（保持四类交叉排列）
+        function buildSession(n) {
+            var master = masterQuestions;
+            if (!master || master.length === 0) {
+                return allQuestions.slice();
+            }
+            if (n >= master.length) {
+                return master.slice();
+            }
+            var rounds = Math.floor(master.length / 4);
+            var need = Math.max(1, Math.round(n / 4)); // 需要多少轮（每轮4题）
+            if (need > rounds) need = rounds;
+            var order = [];
+            for (var r = 0; r < rounds; r++) order.push(r);
+            for (var s = order.length - 1; s > 0; s--) {
+                var jj = Math.floor(Math.random() * (s + 1));
+                var tmp = order[s]; order[s] = order[jj]; order[jj] = tmp;
+            }
+            var picked = [];
+            for (var p = 0; p < need; p++) {
+                var base = order[p] * 4;
+                picked.push(master[base], master[base + 1], master[base + 2], master[base + 3]);
+            }
+            return picked;
+        }
+
         var correctCount = 0;
         var wrongCount = 0;
         var startTime = null;
@@ -1278,6 +1762,96 @@
         var wrongBookList = document.getElementById('wrongBookList');
         var redoAllBtn = document.getElementById('redoAllBtn');
         var clearWrongBtn = document.getElementById('clearWrongBtn');
+
+        // 新增：模式与新元素引用
+        var modeTag = document.getElementById('modeTag');
+        var modeModal = document.getElementById('modeModal');
+        var modeSpeedRow = document.getElementById('modeSpeedRow');
+        var autoSpeedSelect = document.getElementById('autoSpeedSelect');
+        var sessionSizeSelect = document.getElementById('sessionSizeSelect');
+        var modeCards = document.querySelectorAll('.mode-card');
+        var modeSwitchBtn = document.getElementById('modeSwitchBtn');
+        var revealBox = document.getElementById('revealBox');
+        var countdownRing = document.getElementById('countdownRing');
+        var autoplayStatus = document.getElementById('autoplayStatus');
+        var browseControls = document.getElementById('browseControls');
+        var revealBtn = document.getElementById('revealBtn');
+        var pauseBtn = document.getElementById('pauseBtn');
+        var nextBrowseBtn = document.getElementById('nextBrowseBtn');
+        var gameContainer = document.querySelector('.game-container');
+        var historyBtn = document.getElementById('historyBtn');
+        var historyModal = document.getElementById('historyModal');
+        var historyClose = document.getElementById('historyClose');
+        var historyList = document.getElementById('historyList');
+        var historySummary = document.getElementById('historySummary');
+        var clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+        // ===== 本地存储层（localStorage，带降级保护）=====
+        var STORE_WRONG = 'mathgame_wrong_v1';
+        var STORE_HISTORY = 'mathgame_history_v1';
+
+        function storageAvailable() {
+            try {
+                var t = '__mg_test__';
+                window.localStorage.setItem(t, '1');
+                window.localStorage.removeItem(t);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+        var hasStorage = storageAvailable();
+
+        function loadJSON(key, fallback) {
+            if (!hasStorage) return fallback;
+            try {
+                var raw = window.localStorage.getItem(key);
+                if (!raw) return fallback;
+                var parsed = JSON.parse(raw);
+                return parsed || fallback;
+            } catch (e) {
+                return fallback;
+            }
+        }
+
+        function saveJSON(key, value) {
+            if (!hasStorage) return;
+            try {
+                window.localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {}
+        }
+
+        function saveWrongQuestions() {
+            saveJSON(STORE_WRONG, wrongQuestions);
+        }
+
+        // 练习历史：{ ts, mode, total, correct, wrong, acc }
+        function loadHistory() {
+            var h = loadJSON(STORE_HISTORY, []);
+            return (h && h.length !== undefined) ? h : [];
+        }
+
+        function addHistoryRecord(rec) {
+            var list = loadHistory();
+            list.unshift(rec);
+            if (list.length > 100) list = list.slice(0, 100);
+            saveJSON(STORE_HISTORY, list);
+        }
+
+        var MODE_LABEL = {
+            classic: '⌨️ 闯关答题',
+            auto: '▶️ 自动播放',
+            manual: '👆 手动翻牌'
+        };
+
+        // 当前模式状态机：'classic' | 'auto' | 'manual'
+        var gameMode = 'classic';
+        var autoSpeed = 5;          // 自动播放每题作答秒数
+        var revealed = false;       // 手动/自动模式：当前题是否已亮答案
+        var autoTimer = null;       // 自动播放主计时器（题内倒计时）
+        var autoRevealTimer = null; // 亮答案后 3 秒切题计时器
+        var autoCountLeft = 0;      // 倒计时剩余秒
+        var browsedCount = 0;       // 浏览类模式：已浏览题数
 
         function updateTimer() {
             if (!startTime) return;
@@ -1441,6 +2015,7 @@
                     solved: false
                 });
             }
+            saveWrongQuestions();
             updateWrongBadge();
         }
 
@@ -1594,6 +2169,7 @@
                         break;
                     }
                 }
+                saveWrongQuestions();
                 updateWrongBadge();
 
                 if (redoIndex < redoList.length - 1) {
@@ -1627,6 +2203,7 @@
                     wrongQuestions[existIdx].wrongAnswers.push(userVal);
                     wrongQuestions[existIdx].solved = false;
                 }
+                saveWrongQuestions();
                 updateWrongBadge();
 
                 if (redoIndex < redoList.length - 1) {
@@ -1644,11 +2221,17 @@
         }
 
         function submitAnswer() {
+            if (isBrowseMode()) return;
             if (redoMode) {
                 submitRedoAnswer();
                 return;
             }
             if (total === 0) return;
+
+            // 防止同一题重复计分（自动跳题延迟期间重复提交）
+            if (getQuestionResult(currentIndex) !== undefined) {
+                return;
+            }
 
             var q = allQuestions[currentIndex];
             var userVal = answerInput.value.trim();
@@ -1710,6 +2293,323 @@
             }
         }
 
+        // ============================================================
+        // ===============  模式引擎（自动播放 / 手动翻牌）  ===============
+        // ============================================================
+
+        function isBrowseMode() {
+            return gameMode === 'auto' || gameMode === 'manual';
+        }
+
+        function clearAutoTimers() {
+            if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+            if (autoRevealTimer) { clearTimeout(autoRevealTimer); autoRevealTimer = null; }
+        }
+
+        // 渲染浏览模式当前题（不判分）
+        function renderBrowseQuestion() {
+            var q = allQuestions[currentIndex];
+            if (!q) return;
+
+            wordDisplay.classList.remove('word-pop');
+            void wordDisplay.offsetWidth;
+            wordDisplay.textContent = q.display;
+            wordDisplay.classList.add('word-pop');
+
+            progressDisplay.textContent = '第 ' + (currentIndex + 1) + ' / ' + total + ' 题';
+
+            var typeMap = {
+                '不进位加法': '➕ 不进位加法',
+                '退位减法': '➖ 退位减法',
+                '不退位减法': '➖ 不退位减法',
+                '进位加法': '➕ 进位加法'
+            };
+            typeDisplay.textContent = typeMap[q.type] || q.type;
+            subTypeLabel.textContent = gameMode === 'auto' ? '🍿 自动播放中，认真心算～' : '🤔 心算好了就点「看答案」';
+
+            var roundNum = Math.floor(currentIndex / 4) + 1;
+            var totalRounds = Math.floor(total / 4);
+            roundHint.textContent = (gameMode === 'auto' ? '▶️' : '👆') + ' 第 ' + roundNum + ' / ' + totalRounds + ' 轮';
+
+            wordCard.classList.remove('correct', 'wrong');
+            resultHint.textContent = '';
+            revealBox.classList.remove('show');
+            revealBox.textContent = '答案：' + q.answer;
+            revealed = false;
+
+            prevBtn.disabled = (currentIndex === 0);
+        }
+
+        // 亮出答案（自动/手动共用）
+        function revealAnswer() {
+            var q = allQuestions[currentIndex];
+            if (!q) return;
+            revealBox.textContent = '答案：' + q.answer;
+            revealBox.classList.add('show');
+            wordCard.classList.add('correct');
+            revealed = true;
+        }
+
+        // ---------- 自动播放 ----------
+        function autoStartQuestion() {
+            clearAutoTimers();
+            renderBrowseQuestion();
+            autoCountLeft = autoSpeed;
+            countdownRing.classList.add('show');
+            countdownRing.textContent = autoCountLeft;
+            autoplayStatus.classList.add('show');
+            autoplayStatus.textContent = '⏳ ' + autoCountLeft + ' 秒后揭晓答案';
+
+            autoTimer = setInterval(function() {
+                autoCountLeft--;
+                if (autoCountLeft > 0) {
+                    countdownRing.textContent = autoCountLeft;
+                    autoplayStatus.textContent = '⏳ ' + autoCountLeft + ' 秒后揭晓答案';
+                } else {
+                    clearInterval(autoTimer);
+                    autoTimer = null;
+                    countdownRing.classList.remove('show');
+                    revealAnswer();
+                    autoplayStatus.textContent = '✅ 揭晓答案，3 秒后进入下一题';
+                    autoRevealTimer = setTimeout(function() {
+                        autoRevealTimer = null;
+                        browsedCount++;
+                        if (currentIndex < total - 1) {
+                            currentIndex++;
+                            autoStartQuestion();
+                        } else {
+                            finishBrowseSession();
+                        }
+                    }, 3000);
+                }
+            }, 1000);
+        }
+
+        var autoPaused = false;
+        function toggleAutoPause() {
+            if (gameMode !== 'auto') return;
+            if (autoPaused) {
+                autoPaused = false;
+                pauseBtn.textContent = '⏸️ 暂停';
+                // 从当前剩余秒继续；若已揭晓则不重启计时
+                if (!revealed) {
+                    autoTimer = setInterval(function() {
+                        autoCountLeft--;
+                        if (autoCountLeft > 0) {
+                            countdownRing.textContent = autoCountLeft;
+                            autoplayStatus.textContent = '⏳ ' + autoCountLeft + ' 秒后揭晓答案';
+                        } else {
+                            clearInterval(autoTimer);
+                            autoTimer = null;
+                            countdownRing.classList.remove('show');
+                            revealAnswer();
+                            autoplayStatus.textContent = '✅ 揭晓答案，3 秒后进入下一题';
+                            autoRevealTimer = setTimeout(function() {
+                                autoRevealTimer = null;
+                                browsedCount++;
+                                if (currentIndex < total - 1) {
+                                    currentIndex++;
+                                    autoStartQuestion();
+                                } else {
+                                    finishBrowseSession();
+                                }
+                            }, 3000);
+                        }
+                    }, 1000);
+                }
+            } else {
+                autoPaused = true;
+                pauseBtn.textContent = '▶️ 继续';
+                clearAutoTimers();
+                autoplayStatus.textContent = '⏸️ 已暂停';
+            }
+        }
+
+        // ---------- 手动翻牌 ----------
+        function manualStartQuestion() {
+            renderBrowseQuestion();
+            countdownRing.classList.remove('show');
+            autoplayStatus.classList.remove('show');
+            revealBtn.disabled = false;
+            revealBtn.textContent = '👀 看答案';
+            nextBrowseBtn.disabled = (currentIndex >= total);
+        }
+
+        function manualReveal() {
+            if (revealed) return;
+            revealAnswer();
+            revealBtn.disabled = true;
+        }
+
+        function manualNext() {
+            browsedCount++;
+            if (currentIndex < total - 1) {
+                currentIndex++;
+                manualStartQuestion();
+            } else {
+                finishBrowseSession();
+            }
+        }
+
+        // 浏览类模式完成：记录“看了多少题”历史
+        function finishBrowseSession() {
+            clearAutoTimers();
+            countdownRing.classList.remove('show');
+            autoplayStatus.classList.remove('show');
+            var browsed = browsedCount;
+            addHistoryRecord({
+                ts: Date.now(),
+                mode: gameMode,
+                total: browsed,
+                correct: null,
+                wrong: null,
+                acc: null
+            });
+            // 用完成弹窗展示浏览结果
+            finishTotal.textContent = browsed;
+            finishCorrect.textContent = '—';
+            finishAccuracy.textContent = '—';
+            finishTime.textContent = (gameMode === 'auto' ? '自动播放完成' : '手动翻牌完成') + '，共浏览 ' + browsed + ' 题';
+            finishModal.classList.add('show');
+        }
+
+        // ---------- 模式选择 / 切换 ----------
+        function openModeModal() {
+            stopBrowse();
+            modeModal.classList.add('show');
+        }
+
+        function stopBrowse() {
+            clearAutoTimers();
+            autoPaused = false;
+            countdownRing.classList.remove('show');
+            autoplayStatus.classList.remove('show');
+            revealBox.classList.remove('show');
+        }
+
+        function applyModeUI() {
+            modeTag.textContent = gameMode === 'classic' ? '闯关' : (gameMode === 'auto' ? '自动' : '手动');
+            if (isBrowseMode()) {
+                gameContainer.classList.add('browse-mode');
+                browseControls.classList.add('show');
+                // 自动模式：显示暂停，隐藏“看答案/下一题”手动键
+                if (gameMode === 'auto') {
+                    revealBtn.style.display = 'none';
+                    pauseBtn.style.display = '';
+                    nextBrowseBtn.style.display = 'none';
+                } else {
+                    revealBtn.style.display = '';
+                    pauseBtn.style.display = 'none';
+                    nextBrowseBtn.style.display = '';
+                }
+            } else {
+                gameContainer.classList.remove('browse-mode');
+                browseControls.classList.remove('show');
+                stopBrowse();
+            }
+        }
+
+        function startMode(mode) {
+            gameMode = mode;
+            modeModal.classList.remove('show');
+            // 读取题量并重建本次练习题目
+            sessionSize = parseInt(sessionSizeSelect.value, 10) || 20;
+            allQuestions = buildSession(sessionSize);
+            total = allQuestions.length;
+            // 通用重置
+            stopTimer();
+            stopBrowse();
+            redoMode = false;
+            redoList = [];
+            redoIndex = 0;
+            startTime = null;
+            correctCount = 0;
+            wrongCount = 0;
+            browsedCount = 0;
+            userAnswers = {};
+            questionResults = {};
+            currentIndex = 0;
+            revealed = false;
+            autoPaused = false;
+            updateStats();
+            updateTimer();
+            hideFinish();
+            hideWrongBook();
+            applyModeUI();
+
+            if (mode === 'classic') {
+                updateDisplay();
+            } else if (mode === 'auto') {
+                autoSpeed = parseInt(autoSpeedSelect.value, 10) || 5;
+                pauseBtn.textContent = '⏸️ 暂停';
+                autoStartQuestion();
+            } else if (mode === 'manual') {
+                manualStartQuestion();
+            }
+        }
+
+        // ---------- 历史记录 ----------
+        function formatTs(ts) {
+            var d = new Date(ts);
+            function p(n) { return n < 10 ? '0' + n : '' + n; }
+            return (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + p(d.getHours()) + ':' + p(d.getMinutes());
+        }
+
+        function renderHistory() {
+            var list = loadHistory();
+            if (!list || list.length === 0) {
+                historyList.innerHTML = '<div class="history-empty">还没有练习记录，快去做几题吧！</div>';
+                historySummary.textContent = '累计练习 0 次';
+                return;
+            }
+            var totalSessions = list.length;
+            var scored = 0, sumQ = 0, sumCorrect = 0;
+            for (var k = 0; k < list.length; k++) {
+                if (list[k].correct !== null && list[k].correct !== undefined) {
+                    scored++;
+                    sumQ += list[k].total;
+                    sumCorrect += list[k].correct;
+                }
+            }
+            var overallAcc = sumQ > 0 ? Math.round((sumCorrect / sumQ) * 100) : 0;
+            historySummary.textContent = '累计练习 ' + totalSessions + ' 次' +
+                (scored > 0 ? ' · 答题共 ' + sumQ + ' 道，正确 ' + sumCorrect + ' 道（' + overallAcc + '%）' : '');
+
+            var html = '';
+            for (var i = 0; i < list.length; i++) {
+                var r = list[i];
+                var right;
+                if (r.correct === null || r.correct === undefined) {
+                    right = '<div>浏览 ' + r.total + ' 题</div>';
+                } else {
+                    right = '<div class="h-acc">' + r.acc + '%</div>'
+                        + '<div>' + r.total + '题 · 对' + r.correct + ' · 错' + r.wrong + '</div>';
+                }
+                html += '<div class="history-item">'
+                    + '<div class="history-item-left">'
+                    + '<div class="history-item-date">' + formatTs(r.ts) + '</div>'
+                    + '<div class="history-item-mode">' + (MODE_LABEL[r.mode] || r.mode) + '</div>'
+                    + '</div>'
+                    + '<div class="history-item-right">' + right + '</div>'
+                    + '</div>';
+            }
+            historyList.innerHTML = html;
+        }
+
+        function showHistory() {
+            renderHistory();
+            historyModal.classList.add('show');
+        }
+
+        function hideHistory() {
+            historyModal.classList.remove('show');
+        }
+
+        function clearHistory() {
+            saveJSON(STORE_HISTORY, []);
+            renderHistory();
+        }
+
         function showFinish() {
             stopTimer();
             var sessionTotal = redoList.length > 0 ? redoList.length : total;
@@ -1720,6 +2620,17 @@
             finishAccuracy.textContent = acc + '%';
             finishTime.textContent = '总用时：' + totalTimeEl.textContent;
             finishModal.classList.add('show');
+
+            if (gameMode === 'classic' && !redoMode) {
+                addHistoryRecord({
+                    ts: Date.now(),
+                    mode: 'classic',
+                    total: sessionTotal,
+                    correct: sessionCorrect,
+                    wrong: sessionTotal - sessionCorrect,
+                    acc: acc
+                });
+            }
         }
 
         function hideFinish() {
@@ -1727,6 +2638,11 @@
         }
 
         function resetGame() {
+            // 按当前模式重开
+            if (isBrowseMode()) {
+                startMode(gameMode);
+                return;
+            }
             stopTimer();
             if (floatTimer) {
                 clearTimeout(floatTimer);
@@ -1744,6 +2660,9 @@
             userAnswers = {};
             questionResults = {};
             currentIndex = 0;
+            // 重新抽取一批新题（闯关模式）
+            allQuestions = buildSession(sessionSize);
+            total = allQuestions.length;
             updateStats();
             updateDisplay();
             hideFinish();
@@ -1752,11 +2671,26 @@
 
         function clearWrongQuestions() {
             wrongQuestions = [];
+            saveWrongQuestions();
             updateWrongBadge();
             renderWrongBook();
         }
 
         function goPrev() {
+            if (isBrowseMode()) {
+                // 浏览模式：回看上一题
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    if (gameMode === 'auto') {
+                        autoPaused = false;
+                        pauseBtn.textContent = '⏸️ 暂停';
+                        autoStartQuestion();
+                    } else {
+                        manualStartQuestion();
+                    }
+                }
+                return;
+            }
             if (redoMode) return;
             if (currentIndex > 0) {
                 if (floatTimer) {
@@ -1771,6 +2705,24 @@
         }
 
         function goNext() {
+            if (isBrowseMode()) {
+                if (gameMode === 'manual') {
+                    manualNext();
+                } else {
+                    // 自动模式：跳过当前倒计时，立即下一题
+                    clearAutoTimers();
+                    browsedCount++;
+                    if (currentIndex < total - 1) {
+                        currentIndex++;
+                        autoPaused = false;
+                        pauseBtn.textContent = '⏸️ 暂停';
+                        autoStartQuestion();
+                    } else {
+                        finishBrowseSession();
+                    }
+                }
+                return;
+            }
             if (redoMode) return;
             if (currentIndex < total - 1) {
                 if (floatTimer) {
@@ -1888,6 +2840,46 @@
             clearWrongQuestions();
         }, false);
 
+        // ===== 新增：模式 / 浏览控制 / 历史 事件绑定 =====
+        function bindTap(el, fn) {
+            if (!el) return;
+            addEventListenerCompat(el, 'click', fn);
+            addEventListenerCompat(el, 'touchstart', function(e) {
+                e.preventDefault();
+                fn(e);
+            }, false);
+        }
+
+        // 模式卡片选择
+        for (var mc = 0; mc < modeCards.length; mc++) {
+            (function(card) {
+                function pick() {
+                    var m = card.getAttribute('data-mode');
+                    startMode(m);
+                }
+                addEventListenerCompat(card, 'click', pick);
+                addEventListenerCompat(card, 'touchstart', function(e) {
+                    e.preventDefault();
+                    pick();
+                }, false);
+            })(modeCards[mc]);
+        }
+
+        // 选“自动播放”时展开速度选择行（悬停/点击预览）
+        function refreshSpeedRow() {
+            // 当模式弹窗打开时，鼠标移到自动卡片附近就显示；这里简单地常驻显示速度行
+            modeSpeedRow.classList.add('show');
+        }
+        refreshSpeedRow();
+
+        bindTap(modeSwitchBtn, openModeModal);
+        bindTap(revealBtn, manualReveal);
+        bindTap(pauseBtn, toggleAutoPause);
+        bindTap(nextBrowseBtn, manualNext);
+        bindTap(historyBtn, showHistory);
+        bindTap(historyClose, hideHistory);
+        bindTap(clearHistoryBtn, clearHistory);
+
         addEventListenerCompat(wrongBookList, 'click', function(e) {
             var target = e.target || e.srcElement;
             if (target && target.className.indexOf('wrong-item-redo') >= 0 && !target.disabled) {
@@ -1937,16 +2929,26 @@
 
         safeInit();
 
+        // 从本地存储恢复错题本
+        (function restoreWrong() {
+            var w = loadJSON(STORE_WRONG, []);
+            if (w && w.length) {
+                wrongQuestions = w;
+            }
+        })();
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 updateStats();
                 updateWrongBadge();
                 updateDisplay();
+                openModeModal();
             });
         } else {
             updateStats();
             updateWrongBadge();
             updateDisplay();
+            openModeModal();
         }
 
         if (window.console && window.console.log) {
