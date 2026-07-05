@@ -360,37 +360,41 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 16px;
-            padding: 12px 16px;
+            gap: 8px;
+            padding: 10px 12px;
             background: #fcf3e6;
             border-top: 2px solid #eac089;
             flex-shrink: 0;
         }
 
+        .nav-area + .nav-area {
+            border-top: none;
+            padding-top: 0;
+        }
+
         .nav-btn {
             background: #f5b06b;
             border: none;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-size: 1rem;
+            padding: 9px 14px;
+            border-radius: 22px;
+            font-size: 0.92rem;
             font-weight: bold;
             color: white;
             cursor: pointer;
-            box-shadow: 0 5px 0 #b1703a;
+            box-shadow: 0 4px 0 #b1703a;
             transition: 0.06s linear;
             font-family: inherit;
-            letter-spacing: 1px;
-            min-width: 80px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
+            white-space: nowrap;
             -webkit-tap-highlight-color: transparent;
         }
 
         .nav-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 2px 0 #b1703a;
+            box-shadow: 0 1px 0 #b1703a;
         }
 
         .nav-btn:hover {
@@ -400,14 +404,14 @@
         .nav-btn:disabled {
             opacity: 0.45;
             transform: translateY(3px);
-            box-shadow: 0 2px 0 #b1703a;
+            box-shadow: 0 1px 0 #b1703a;
             cursor: not-allowed;
             pointer-events: none;
         }
 
         .nav-btn.prev-btn {
             background: #7fa9c9;
-            box-shadow: 0 5px 0 #4f6f8f;
+            box-shadow: 0 4px 0 #4f6f8f;
         }
 
         .nav-btn.prev-btn:hover {
@@ -416,9 +420,7 @@
 
         .nav-btn.reset-btn {
             background: #95a5a6;
-            box-shadow: 0 5px 0 #7f8c8d;
-            font-size: 0.9rem;
-            padding: 8px 18px;
+            box-shadow: 0 4px 0 #7f8c8d;
         }
 
         .nav-btn.reset-btn:hover {
@@ -426,14 +428,15 @@
         }
 
         .progress-hint {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #3d5a3d;
             background: #fffbee;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 30px;
             border: 2px solid #dbbd95;
             text-align: center;
+            white-space: nowrap;
         }
 
         @keyframes popIn {
@@ -1343,13 +1346,21 @@
         .game-container.browse-mode .answer-label {
             display: none;
         }
+
+        /* 浏览模式（自动/手动）不判分：隐藏无意义的统计栏与错题本入口 */
+        .game-container.browse-mode .stats-bar {
+            display: none;
+        }
+        .game-container.browse-mode .wrong-book-btn {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="game-container">
     <div class="game-header">
-        <h1>🧮 口算PK赛 🧮<span class="mode-tag" id="modeTag">闯关</span></h1>
+        <h1>🧮 口算PK赛<span class="mode-tag" id="modeTag">闯关</span></h1>
         <div class="header-meta">
             <span class="meta-badge" id="progressDisplay">第 1 / 0 题</span>
             <span class="type-badge" id="typeDisplay">🏷️ 准备</span>
